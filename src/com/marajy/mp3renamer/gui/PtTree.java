@@ -1,0 +1,150 @@
+package com.marajy.mp3renamer.gui;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TreeEditor;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
+
+public class PtTree {
+
+	public static void addTree(Tree tree ) {
+		Display display = tree.getDisplay();
+		final Image waitImage = new Image(display, "ressources/icones/stock_timezone.png");
+		final Image valideImage = new Image(display, "ressources/icones/dialog-apply.png");
+		final Image problemImage = new Image(display, "ressources/icones/mail-mark-important.png");
+		final Image homeImage = new Image(display, "ressources/icones/applications-internet.png");
+		final Image googleImage = new Image(display, "ressources/icones/google.png");
+		final Image yahooImage = new Image(display, "ressources/icones/yahoo.png");
+		final Image exaleadImage = new Image(display, "ressources/icones/exalead.png");
+		final Image bingImage = new Image(display, "ressources/icones/bing.png");
+		
+		
+			TreeItem iItem = new TreeItem (tree, 0);
+			TreeColumn col1 = new TreeColumn(tree,SWT.LEFT);
+			col1.setWidth(150);		 
+			TreeColumn col2 = new TreeColumn(tree,SWT.LEFT);
+			col2.setWidth(150);
+			iItem.setText ("Voiture+ann�e+30..." );
+			iItem.setImage(homeImage);
+				TreeItem jItem = new TreeItem (iItem, 0);
+				jItem.setText ("Google" );
+				ProgressBar bar = new ProgressBar (tree, SWT.NONE);
+				bar.setSelection (100);	
+				bar.setForeground(new Color(display, 233,94,26));
+				bar.setBackground(new Color(display, 233,94,26));
+				TreeEditor editor = new TreeEditor (tree);
+				editor.grabHorizontal = editor.grabVertical = true;
+				editor.setEditor (bar, jItem, 1);				
+				jItem.setImage(googleImage);
+				TreeItem jItem2 = new TreeItem (iItem, 0);
+				jItem2.setText ("Yahoo" );
+				ProgressBar bar2 = new ProgressBar (tree, SWT.NONE);
+				bar2.setSelection (80);				
+				TreeEditor editor2 = new TreeEditor (tree);
+				editor2.grabHorizontal = editor2.grabVertical = true;
+				editor2.setEditor (bar2, jItem2, 1);
+				jItem2.setImage(yahooImage);
+				TreeItem jItem3 = new TreeItem (iItem, 0);
+				jItem3.setText ("Exalead" );
+				ProgressBar bar3 = new ProgressBar (tree, SWT.NONE);
+				bar3.setSelection (60);				
+				TreeEditor editor3 = new TreeEditor (tree);
+				editor3.grabHorizontal = editor3.grabVertical = true;
+				editor3.setEditor (bar3, jItem3, 1);
+				jItem3.setImage(exaleadImage);
+				TreeItem jItem4 = new TreeItem (iItem, 0);
+				jItem4.setText ("Bing" );
+				ProgressBar bar4 = new ProgressBar (tree, SWT.NONE);
+				bar4.setSelection (20);				
+				TreeEditor editor4 = new TreeEditor (tree);
+				editor4.grabHorizontal = editor4.grabVertical = true;
+				editor4.setEditor (bar4, jItem4, 1);
+				jItem4.setImage(bingImage);
+				
+			TreeItem kItem = new TreeItem (tree, 0);
+			kItem.setText ("Eolien+desert+mar..." );
+			kItem.setImage(homeImage);	
+				TreeItem jItem11 = new TreeItem (kItem, 0);
+				jItem11.setText ("Google" );
+				ProgressBar bar11 = new ProgressBar (tree, SWT.NONE);
+				bar11.setSelection (100);				
+				TreeEditor editor11 = new TreeEditor (tree);
+				editor11.grabHorizontal = editor11.grabVertical = true;
+				editor11.setEditor (bar11, jItem11, 1);				
+				jItem11.setImage(googleImage);
+				TreeItem jItem12 = new TreeItem (kItem, 0);
+				jItem12.setText ("Yahoo" );
+				ProgressBar bar12 = new ProgressBar (tree, SWT.NONE);
+				bar12.setSelection (66);
+				bar12.setForeground(new Color(display, 233,94,26));
+				bar12.setBackground(new Color(display, 233,94,26));
+				bar12.redraw();
+				TreeEditor editor12 = new TreeEditor (tree);
+				editor12.grabHorizontal = editor12.grabVertical = true;
+				editor12.setEditor (bar12, jItem12, 1);
+				jItem12.setImage(yahooImage);
+				TreeItem jItem13 = new TreeItem (kItem, 0);
+				jItem13.setText ("Exalead" );
+				ProgressBar bar13 = new ProgressBar (tree, SWT.NONE);
+				bar13.setSelection (100);				
+				TreeEditor editor13 = new TreeEditor (tree);
+				editor13.grabHorizontal = editor13.grabVertical = true;
+				editor13.setEditor (bar13, jItem13, 1);
+				jItem13.setImage(exaleadImage);
+				TreeItem jItem14 = new TreeItem (kItem, 0);
+				jItem14.setText ("Bing" );
+				ProgressBar bar14 = new ProgressBar (tree, SWT.NONE);
+				bar14.setSelection (100);				
+				TreeEditor editor14 = new TreeEditor (tree);
+				editor14.grabHorizontal = editor14.grabVertical = true;
+				editor14.setEditor (bar14, jItem14, 1);
+				jItem14.setImage(bingImage);
+				
+			TreeItem rItem = new TreeItem (tree, 0);
+			rItem.setText ("citroen+nouveaut�..." );
+			rItem.setImage(homeImage);			
+					TreeItem sItem = new TreeItem (rItem, 0);
+					sItem.setText ("Snapshot-12.12.2011" );
+					sItem.setImage(problemImage);
+					TreeItem sItem2 = new TreeItem (rItem, 0);
+					sItem2.setText ("Snapshot-16.12.2011" );
+					sItem2.setImage(valideImage);
+					TreeItem sItem3 = new TreeItem (rItem, 0);
+					sItem3.setText ("Snapshot-03.01.2012" );
+					sItem3.setImage(valideImage);
+					TreeItem sItem4 = new TreeItem (rItem, 0);
+					sItem4.setText ("Snapshot-16.01.2012" );
+					sItem4.setImage(waitImage);
+			TreeItem pItem = new TreeItem (tree, 0);
+			pItem.setText ("renault+nouveaut�..." );
+			pItem.setImage(homeImage);			
+					TreeItem pItem1 = new TreeItem (pItem, 0);
+					pItem1.setText ("Snapshot-12.12.2011" );
+					pItem1.setImage(problemImage);
+					TreeItem pItem2 = new TreeItem (pItem, 0);
+					pItem2.setText ("Snapshot-16.12.2011" );
+					pItem2.setImage(valideImage);
+					TreeItem pItem3 = new TreeItem (pItem, 0);
+					pItem3.setText ("Snapshot-03.01.2012" );
+					pItem3.setImage(valideImage);
+					TreeItem pItem4 = new TreeItem (pItem, 0);
+					pItem4.setText ("Snapshot-16.01.2012" );
+					pItem4.setImage(waitImage);
+				
+			
+		final FormData treeData = new FormData (SWT.DEFAULT, SWT.DEFAULT);
+		treeData.left = new FormAttachment (0, 2);
+		treeData.right = new FormAttachment (30, -2);
+		treeData.top = new FormAttachment(0,46);
+		treeData.bottom = new FormAttachment(100,-16);
+		tree.setLayoutData (treeData);
+		
+	}
+
+}
