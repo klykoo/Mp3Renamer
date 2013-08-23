@@ -1,10 +1,16 @@
 package com.marajy.mp3renamer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import javazoom.jl.player.AudioDevice;
+import javazoom.jl.player.FactoryRegistry;
+import javazoom.jl.player.Player;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -33,6 +39,8 @@ import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
+//import javax.sound.sampled.AudioFormat;
+
 public class Main {
 
 	static Text artisteText;
@@ -45,11 +53,15 @@ public class Main {
 	static Text sizeText;
 	static Text durationText;
 	static Process p;
+	static Thread playerThread;
+	private static Player player;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
+		
 
 		// ============================================
 		// GUI
@@ -59,28 +71,28 @@ public class Main {
 		final Shell shell = new Shell(display);
 		shell.setText("Mp3 Renamer");
 
-		final Image imageSave = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("document-save.png"));
-		final Image imageExit = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("application_exit.png"));
-		final Image imageFind = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("deskbar-applet.png"));
-		final Image imageMusic = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("music.png"));
-		final Image deleteFile = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("edit-delete.png"));
-		final Image clearList = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("edit-clear.png"));
-		final Image refreshList = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("repeat.png"));
-		final Image editCopy = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("edit-copy.png"));
-		//final Image aboutImage = new Image(display,
-			//	"ressources/icones/about.png");
-		final Image mediaStartImage = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("media-start.png"));
-		final Image mediaStopImage = new Image(display,
-				Main.class.getClassLoader().getResourceAsStream("media-stop.png"));
+		final Image imageSave = new Image(display, Main.class.getClassLoader()
+				.getResourceAsStream("document-save.png"));
+		final Image imageExit = new Image(display, Main.class.getClassLoader()
+				.getResourceAsStream("application_exit.png"));
+		final Image imageFind = new Image(display, Main.class.getClassLoader()
+				.getResourceAsStream("deskbar-applet.png"));
+		final Image imageMusic = new Image(display, Main.class.getClassLoader()
+				.getResourceAsStream("music.png"));
+		final Image deleteFile = new Image(display, Main.class.getClassLoader()
+				.getResourceAsStream("edit-delete.png"));
+		final Image clearList = new Image(display, Main.class.getClassLoader()
+				.getResourceAsStream("edit-clear.png"));
+		final Image refreshList = new Image(display, Main.class
+				.getClassLoader().getResourceAsStream("repeat.png"));
+		final Image editCopy = new Image(display, Main.class.getClassLoader()
+				.getResourceAsStream("edit-copy.png"));
+		// final Image aboutImage = new Image(display,
+		// "ressources/icones/about.png");
+		final Image mediaStartImage = new Image(display, Main.class
+				.getClassLoader().getResourceAsStream("media-start.png"));
+		final Image mediaStopImage = new Image(display, Main.class
+				.getClassLoader().getResourceAsStream("media-stop.png"));
 
 		shell.setImage(imageMusic);
 		Label labelFolder = new Label(shell, SWT.WRAP);
@@ -517,48 +529,47 @@ public class Main {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 
-				try {
-					if (list != null && list.getSelection() != null
-							&& list.getSelection().length > 0) {
-						if (p == null) {
-							String[] args = new String[2];
-							args[0] = "vlc";
-							args[1] = "file://"
-									+ list.getSelection()[0].toString() + "";
-							System.out.println(args[0] + args[1]);
-							p = Runtime.getRuntime().exec(args);
-							System.out.println(p.getOutputStream().toString());
-							mediaButton.setImage(mediaStopImage);
-						} else {
-							String[] args = new String[2];
-							System.out.println(args[0] + args[1]);
-							p.destroy();
-							p = null;
-							mediaButton.setImage(mediaStartImage);
-						}
-					} else {
-						if (p == null) {
-							String[] args = new String[2];
-							args[0] = "vlc";
-							args[1] = folderPath.getText();
-									//+ list.getSelection()[0].toString() + "";
-							System.out.println(args[0] + args[1]);
-							p = Runtime.getRuntime().exec(args);
-							System.out.println(p.getOutputStream().toString());
-							mediaButton.setImage(mediaStopImage);
-						} else {
-							String[] args = new String[2];
-							System.out.println(args[0] + args[1]);
-							p.destroy();
-							p = null;
-							mediaButton.setImage(mediaStartImage);
-						}
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				/*
+				 * try { if (list != null && list.getSelection() != null &&
+				 * list.getSelection().length > 0) { if (p == null) { String[]
+				 * args = new String[2]; args[0] = "vlc"; args[1] = "file://" +
+				 * list.getSelection()[0].toString() + "";
+				 * System.out.println(args[0] + args[1]); p =
+				 * Runtime.getRuntime().exec(args);
+				 * System.out.println(p.getOutputStream().toString());
+				 * mediaButton.setImage(mediaStopImage); } else { String[] args
+				 * = new String[2]; System.out.println(args[0] + args[1]);
+				 * p.destroy(); p = null; mediaButton.setImage(mediaStartImage);
+				 * } } else { if (p == null) { String[] args = new String[2];
+				 * args[0] = "vlc"; args[1] = folderPath.getText(); //+
+				 * list.getSelection()[0].toString() + "";
+				 * System.out.println(args[0] + args[1]); p =
+				 * Runtime.getRuntime().exec(args);
+				 * System.out.println(p.getOutputStream().toString());
+				 * mediaButton.setImage(mediaStopImage); } else { String[] args
+				 * = new String[2]; System.out.println(args[0] + args[1]);
+				 * p.destroy(); p = null; mediaButton.setImage(mediaStartImage);
+				 * } } } catch (IOException e) { // TODO Auto-generated catch
+				 * block e.printStackTrace(); }
+				 */
+				/*
+				 * try { // Creer un nouveau lecteur et ajouter un ?couteur. if
+				 * (lecteur != null) lecteur.close(); lecteur =
+				 * Manager.createPlayer(new MediaLocator("file:/" +
+				 * list.getSelection()[0].toString())); //
+				 * lecteur.addControllerListener( new EventHandler() );
+				 * lecteur.addControllerListener(new ControllerListener() {
+				 * public void controllerUpdate(ControllerEvent event) { if
+				 * (event instanceof EndOfMediaEvent) { lecteur.stop();
+				 * lecteur.close(); } } }); lecteur.realize();
+				 * System.out.println("file:/" +
+				 * list.getSelection()[0].toString() + " "+ lecteur.getRate());
+				 * lecteur.start(); // D?marrage du lecteur. } catch (Exception
+				 * e) { System.out.println("Fichier ou emplacement invalide" +
+				 * "Chargement du fichier" + " erron?"); e.printStackTrace(); }
+				 */
 
+				getTask(list.getSelection()[0].toString()).start();
 			}
 
 			@Override
@@ -616,4 +627,38 @@ public class Main {
 		list.redraw();
 	}
 
+	
+	public static Thread getTask(String fileName) {
+		final String fFileName = fileName;
+		if (player != null) {
+			player.close();
+		}
+		if (playerThread != null ) {
+			playerThread.interrupt();
+		}
+
+		playerThread = new Thread() {
+			public void run() {
+				try {
+
+					System.out.println("playing " + fFileName + "...");
+					InputStream in = new FileInputStream(new File(fFileName));
+
+					AudioDevice dev = FactoryRegistry.systemRegistry()
+							.createAudioDevice();
+					player = new Player(in, dev);
+					player.play();
+				} catch (IOException ex) {
+					System.out.println("Problem playing file " + fFileName);
+					ex.printStackTrace();
+				} catch (Exception ex) {
+					System.out.println("Problem playing file " + fFileName);
+					ex.printStackTrace();
+				}
+			}
+		};
+
+		return playerThread;
+
+	}
 }
