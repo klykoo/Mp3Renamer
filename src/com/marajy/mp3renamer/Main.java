@@ -13,9 +13,13 @@ import javazoom.jl.player.FactoryRegistry;
 import javazoom.jl.player.Player;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -26,9 +30,15 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -47,8 +57,10 @@ public class Main {
 	static Text titreText;
 	static Text newFileName;
 	static List list;
+	static List listLeft;
 	static Text fileName;
 	static Text folderPath;
+	static Text folderPathLeft;
 	static Text rateText;
 	static Text sizeText;
 	static Text durationText;
@@ -61,22 +73,17 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		
-
 		// ============================================
 		// GUI
 		// ============================================
 
 		final Display display = new Display();
-		final Shell shell = new Shell(display);
-		shell.setText("Mp3 Renamer");
-
 		final Image imageSave = new Image(display, Main.class.getClassLoader()
-				.getResourceAsStream("document-save.png"));
+				.getResourceAsStream("save.png"));
 		final Image imageExit = new Image(display, Main.class.getClassLoader()
 				.getResourceAsStream("application_exit.png"));
 		final Image imageFind = new Image(display, Main.class.getClassLoader()
-				.getResourceAsStream("deskbar-applet.png"));
+				.getResourceAsStream("folder.png"));
 		final Image imageMusic = new Image(display, Main.class.getClassLoader()
 				.getResourceAsStream("music.png"));
 		final Image deleteFile = new Image(display, Main.class.getClassLoader()
@@ -87,22 +94,92 @@ public class Main {
 				.getClassLoader().getResourceAsStream("repeat.png"));
 		final Image editCopy = new Image(display, Main.class.getClassLoader()
 				.getResourceAsStream("edit-copy.png"));
-		// final Image aboutImage = new Image(display,
-		// "ressources/icones/about.png");
+		final Image aboutImage = new Image(display,
+				"ressources/icones/about.png");
 		final Image mediaStartImage = new Image(display, Main.class
 				.getClassLoader().getResourceAsStream("media-start.png"));
 		final Image mediaStopImage = new Image(display, Main.class
 				.getClassLoader().getResourceAsStream("media-stop.png"));
+		final Image mediaPlayAllImage = new Image(display, Main.class
+				.getClassLoader().getResourceAsStream("media-forward.png"));
 
+		final Shell shell = new Shell(display);
+		Menu appMenuBar = display.getMenuBar();
+		if (appMenuBar == null) {
+			appMenuBar = new Menu(shell, SWT.BAR);
+			shell.setMenuBar(appMenuBar);
+		}
+		MenuItem file = new MenuItem(appMenuBar, SWT.CASCADE);
+		file.setText("File");
+		Menu dropdown = new Menu(appMenuBar);
+		file.setMenu(dropdown);
+		MenuItem exit = new MenuItem(dropdown, SWT.PUSH);
+		exit.setText("Exit");
+		exit.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				display.dispose();
+			};
+		});
+		
+		Image image = new Image (display, 20, 20);
+		Color color = display.getSystemColor (SWT.COLOR_BLUE);
+		GC gc = new GC (image);
+		gc.setBackground (color);
+		gc.fillRectangle (image.getBounds ());
+		gc.dispose ();
+		
+		Image disabledImage = new Image (display, 20, 20);
+		color = display.getSystemColor (SWT.COLOR_GREEN);
+		gc = new GC (disabledImage);
+		gc.setBackground (color);
+		gc.fillRectangle (disabledImage.getBounds ());
+		gc.dispose ();
+		
+		Image hotImage = new Image (display, 20, 20);
+		color = display.getSystemColor (SWT.COLOR_RED);
+		gc = new GC (hotImage);
+		gc.setBackground (color);
+		gc.fillRectangle (hotImage.getBounds ());
+		gc.dispose ();
+		
+		ToolBar bar = new ToolBar (shell, SWT.BORDER | SWT.FLAT);
+		Rectangle clientArea = shell.getClientArea ();
+		bar.setBounds (clientArea.x, clientArea.y, 200, 32);
+		
+			ToolItem item = new ToolItem (bar, 0);
+			item.setImage (imageSave);
+			item.setDisabledImage (disabledImage);
+			item.setHotImage (hotImage);
+			
+		
+		FormLayout formLayout = new FormLayout();
+		final int insetX = 4, insetY = 4;
+		formLayout.marginWidth = insetX;
+		formLayout.marginHeight = insetY;
+		shell.setLayout(formLayout);
+
+		ToolBar toolBar = new ToolBar(shell, SWT.FLAT);
+		// toolBar.setLayoutData(formLayout);
+
+		shell.setText("Mp3 Renamer");
+
+		
 		shell.setImage(imageMusic);
-		Label labelFolder = new Label(shell, SWT.WRAP);
-		labelFolder.setText("Folder to explore: ");
+		// Label labelFolder = new Label(shell, SWT.WRAP);
+		// labelFolder.setText("Folder to explore: ");
 		folderPath = new Text(shell, SWT.WRAP);
+		folderPathLeft = new Text(shell, SWT.WRAP);
 		folderPath.setText("/home/freeman/Musique/");
+		folderPath.setEditable(false);
+		folderPathLeft.setEditable(false);
+
 		Button scanFolderButton = new Button(shell, SWT.PUSH);
 		scanFolderButton.setImage(imageFind);
+		Button scanFolderLeftButton = new Button(shell, SWT.PUSH);
+		scanFolderLeftButton.setImage(imageFind);
 
 		list = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		listLeft = new List(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 
 		Label label2 = new Label(shell, SWT.WRAP);
 		label2.setText("File name");
@@ -124,91 +201,125 @@ public class Main {
 		label5.setText("New File Name");
 		newFileName = new Text(shell, SWT.WRAP);
 
-		final int insetX = 4, insetY = 4;
-		FormLayout formLayout = new FormLayout();
-		formLayout.marginWidth = insetX;
-		formLayout.marginHeight = insetY;
-		shell.setLayout(formLayout);
-
-		final FormData labelData = new FormData(100, SWT.DEFAULT);
-		labelData.left = new FormAttachment(0, 0);
-		labelData.width = 120;
-		labelFolder.setLayoutData(labelData);
+		final FormData folderPathLeftData = new FormData(100, SWT.DEFAULT);
+		folderPathLeftData.top = new FormAttachment(bar, 5);
+		folderPathLeftData.left = new FormAttachment(scanFolderLeftButton, 5);
+		folderPathLeftData.right = new FormAttachment(49, 0);
+		folderPathLeftData.height = 22;
+		folderPathLeft.setLayoutData(folderPathLeftData);
 
 		final FormData folderPathData = new FormData(100, SWT.DEFAULT);
-		folderPathData.left = new FormAttachment(labelFolder, 10);
-		folderPathData.right = new FormAttachment(scanFolderButton, -10);
+		folderPathData.top = new FormAttachment(bar, 5);
+		folderPathData.left = new FormAttachment(scanFolderButton, 5);
+		folderPathData.right = new FormAttachment(100, 0);
+		folderPathData.height = 22;
 		folderPath.setLayoutData(folderPathData);
 
 		final FormData scanFolderButtonData = new FormData(100, SWT.DEFAULT);
-		scanFolderButtonData.right = new FormAttachment(100, 0);
+		scanFolderButtonData.top = new FormAttachment(bar, 5);
+		scanFolderButtonData.right = new FormAttachment(50, 22);
+		scanFolderButtonData.width = 22;
 		scanFolderButton.setLayoutData(scanFolderButtonData);
-		scanFolderButtonData.width = 70;
-		// Copy button
-		final Button copyButton = new Button(shell, SWT.PUSH);
-		copyButton.setImage(editCopy);
-		FormData copyButtonData = new FormData();
-		copyButtonData.right = new FormAttachment(60, 0);
-		copyButtonData.bottom = new FormAttachment(100, -5);
-		copyButtonData.width = 70;
-		copyButton.setLayoutData(copyButtonData);
 
-		// About button
-		final Button mediaButton = new Button(shell, SWT.PUSH);
-		mediaButton.setImage(mediaStartImage);
-		FormData mediaButtonData = new FormData();
-		mediaButtonData.right = new FormAttachment(70, 0);
-		mediaButtonData.bottom = new FormAttachment(100, -5);
-		mediaButtonData.width = 70;
-		mediaButton.setLayoutData(mediaButtonData);
+		final FormData scanFolderLeftButtonData = new FormData(100, SWT.DEFAULT);
+		scanFolderLeftButtonData.top = new FormAttachment(bar, 5);
+		scanFolderLeftButtonData.right = new FormAttachment(0, 22);
+		scanFolderLeftButtonData.width = 22;
+		scanFolderLeftButton.setLayoutData(scanFolderLeftButtonData);
+
 		// Exit button
 		final Button exitButton = new Button(shell, SWT.PUSH);
 		exitButton.setImage(imageExit);
 		FormData exitButtonData = new FormData();
-		exitButtonData.right = new FormAttachment(50, 0);
+		exitButtonData.right = new FormAttachment(90, 0);
 		exitButtonData.bottom = new FormAttachment(100, -5);
 		exitButtonData.width = 70;
 		exitButton.setLayoutData(exitButtonData);
-
-		// Save button
-		final Button saveButton = new Button(shell, SWT.PUSH);
-		saveButton.setImage(imageSave);
-		FormData saveButtonData = new FormData();
-		saveButtonData.right = new FormAttachment(40, 0);
-		saveButtonData.bottom = new FormAttachment(100, -5);
-		saveButtonData.width = 70;
-		saveButton.setLayoutData(saveButtonData);
 
 		// Clear button
 		final Button clearListButton = new Button(shell, SWT.PUSH);
 		clearListButton.setImage(clearList);
 		FormData clearListButtonData = new FormData();
-		clearListButtonData.right = new FormAttachment(10, 0);
+		clearListButtonData.right = new FormAttachment(0, 50);
 		clearListButtonData.bottom = new FormAttachment(100, -5);
-		clearListButtonData.width = 70;
+		clearListButtonData.width = 50;
 		clearListButton.setLayoutData(clearListButtonData);
 
 		// Refresh button
 		final Button refreshButton = new Button(shell, SWT.PUSH);
 		refreshButton.setImage(refreshList);
 		FormData refreshButtonData = new FormData();
-		refreshButtonData.right = new FormAttachment(20, 0);
+		refreshButtonData.left = new FormAttachment(clearListButton, 5);
 		refreshButtonData.bottom = new FormAttachment(100, -5);
-		refreshButtonData.width = 70;
+		refreshButtonData.width = 50;
 		refreshButton.setLayoutData(refreshButtonData);
 
 		// Delete button
 		final Button deleteButton = new Button(shell, SWT.PUSH);
 		deleteButton.setImage(deleteFile);
 		FormData deleteButtonData = new FormData();
-		deleteButtonData.right = new FormAttachment(30, 0);
+		deleteButtonData.left = new FormAttachment(refreshButton, 5);
 		deleteButtonData.bottom = new FormAttachment(100, -5);
-		deleteButtonData.width = 70;
+		deleteButtonData.width = 50;
 		deleteButton.setLayoutData(deleteButtonData);
+
+		// Save button
+		final Button saveButton = new Button(shell, SWT.PUSH);
+		saveButton.setImage(imageSave);
+		FormData saveButtonData = new FormData();
+		saveButtonData.left = new FormAttachment(deleteButton, 5);
+		saveButtonData.bottom = new FormAttachment(100, -5);
+		saveButtonData.width = 50;
+		saveButton.setLayoutData(saveButtonData);
+		saveButton.setToolTipText("Enregistrer le nouveau nom du fichier");
+
+		// Copy button
+		final Button copyButton = new Button(shell, SWT.PUSH);
+		copyButton.setImage(editCopy);
+		FormData copyButtonData = new FormData();
+		copyButtonData.left = new FormAttachment(saveButton, 5);
+		copyButtonData.bottom = new FormAttachment(100, -5);
+		copyButtonData.width = 50;
+		copyButton.setLayoutData(copyButtonData);
+
+		// Media start button
+		final Button mediaButton = new Button(shell, SWT.PUSH);
+		mediaButton.setImage(mediaStartImage);
+		FormData mediaButtonData = new FormData();
+		mediaButtonData.left = new FormAttachment(copyButton, 5);
+		mediaButtonData.bottom = new FormAttachment(100, -5);
+		mediaButtonData.width = 50;
+		mediaButton.setLayoutData(mediaButtonData);
+
+		// Play All button
+		final Button playAllButton = new Button(shell, SWT.PUSH);
+		playAllButton.setImage(mediaPlayAllImage);
+		FormData playAllButtonData = new FormData();
+		playAllButtonData.left = new FormAttachment(mediaButton, 5);
+		playAllButtonData.bottom = new FormAttachment(100, -5);
+		playAllButtonData.width = 50;
+		playAllButton.setLayoutData(playAllButtonData);
+
+		// Stop button
+		final Button stopButton = new Button(shell, SWT.PUSH);
+		stopButton.setImage(mediaStopImage);
+		FormData stopButtonData = new FormData();
+		stopButtonData.left = new FormAttachment(playAllButton, 5);
+		stopButtonData.bottom = new FormAttachment(100, -5);
+		stopButtonData.width = 50;
+		stopButton.setLayoutData(stopButtonData);
+
+		// List left component
+		final FormData listLeftData = new FormData();
+		listLeftData.left = new FormAttachment(0, 0);
+		listLeftData.right = new FormAttachment(49, 0);
+		listLeftData.top = new FormAttachment(scanFolderButton, 5);
+		listLeftData.bottom = new FormAttachment(fileName, -5);
+		listLeft.setLayoutData(listLeftData);
 
 		// List component
 		final FormData listData = new FormData();
-		listData.left = new FormAttachment(0, 0);
+		listData.left = new FormAttachment(50, 0);
 		listData.right = new FormAttachment(100, 0);
 		listData.top = new FormAttachment(scanFolderButton, 5);
 		listData.bottom = new FormAttachment(fileName, -5);
@@ -247,19 +358,11 @@ public class Main {
 		text3Data.left = new FormAttachment(0, 100);
 		titreText.setLayoutData(text3Data);
 
-		// Rate label
-		Label rateLabel = new Label(shell, SWT.WRAP);
-		rateLabel.setText("File rate");
-		FormData rateLabelData = new FormData();
-		rateLabelData.bottom = new FormAttachment(exitButton, -5);
-		rateLabelData.left = new FormAttachment(0, 5);
-		rateLabel.setLayoutData(rateLabelData);
-
 		// Rate text
 		rateText = new Text(shell, SWT.WRAP);
 		rateText.setEditable(false);
 		FormData rateTextData = new FormData();
-		rateTextData.bottom = new FormAttachment(exitButton, -5);
+		rateTextData.bottom = new FormAttachment(exitButton, -35);
 		rateTextData.left = new FormAttachment(0, 100);
 		rateText.setLayoutData(rateTextData);
 
@@ -267,7 +370,7 @@ public class Main {
 		Label sizeLabel = new Label(shell, SWT.WRAP);
 		sizeLabel.setText("File size");
 		FormData sizeLabelData = new FormData();
-		sizeLabelData.bottom = new FormAttachment(exitButton, -5);
+		sizeLabelData.bottom = new FormAttachment(exitButton, -35);
 		sizeLabelData.left = new FormAttachment(rateText, 100);
 		sizeLabel.setLayoutData(sizeLabelData);
 
@@ -275,7 +378,7 @@ public class Main {
 		sizeText = new Text(shell, SWT.WRAP);
 		sizeText.setEditable(false);
 		FormData sizeTextData = new FormData();
-		sizeTextData.bottom = new FormAttachment(exitButton, -5);
+		sizeTextData.bottom = new FormAttachment(exitButton, -35);
 		sizeTextData.left = new FormAttachment(sizeLabel, 5);
 		sizeTextData.width = 100;
 		sizeText.setLayoutData(sizeTextData);
@@ -284,7 +387,7 @@ public class Main {
 		Label durationLabel = new Label(shell, SWT.WRAP);
 		durationLabel.setText("File duration");
 		FormData durationLabellData = new FormData();
-		durationLabellData.bottom = new FormAttachment(exitButton, -5);
+		durationLabellData.bottom = new FormAttachment(exitButton, -35);
 		durationLabellData.left = new FormAttachment(sizeText, 100);
 		durationLabel.setLayoutData(durationLabellData);
 
@@ -292,10 +395,18 @@ public class Main {
 		durationText = new Text(shell, SWT.WRAP);
 		durationText.setEditable(false);
 		FormData durationTextData = new FormData();
-		durationTextData.bottom = new FormAttachment(exitButton, -5);
+		durationTextData.bottom = new FormAttachment(exitButton, -35);
 		durationTextData.left = new FormAttachment(durationLabel, 5);
 		durationTextData.width = 100;
 		durationText.setLayoutData(durationTextData);
+
+		// Rate label
+		Label rateLabel = new Label(shell, SWT.WRAP);
+		rateLabel.setText("File rate");
+		FormData rateLabelData = new FormData();
+		rateLabelData.bottom = new FormAttachment(exitButton, -35);
+		rateLabelData.left = new FormAttachment(0, 5);
+		rateLabel.setLayoutData(rateLabelData);
 
 		FormData label5Data = new FormData();
 		label5Data.bottom = new FormAttachment(rateLabel, -5);
@@ -307,6 +418,17 @@ public class Main {
 		text4Data.right = new FormAttachment(100, 0);
 		text4Data.left = new FormAttachment(0, 100);
 		newFileName.setLayoutData(text4Data);
+
+		
+
+		final Scale pb = new Scale(shell,
+				SWT.WRAP);
+		FormData pbData = new FormData();
+		pbData.top = new FormAttachment(rateLabel, 10);
+		pbData.left = new FormAttachment(0, 0);
+		pbData.right = new FormAttachment(100, 0);
+		// pbData.width = 100;
+		pb.setLayoutData(pbData);
 		// ==================================================
 		// Actions
 		// ==================================================
@@ -414,8 +536,11 @@ public class Main {
 			public void handleEvent(Event arg0) {
 				resetButList();
 				try {
-					File file = new File(list.getSelection()[0]);
+
+					File file = new File(folderPath.getText() + "/"
+							+ list.getSelection()[0]);
 					fileName.setText(file.getName());
+					System.out.println(file.getAbsolutePath());
 					AudioFile mp3 = AudioFileIO.read(file);
 					Tag tag = mp3.getTag();
 					String artiste = tag.getFirst(FieldKey.ARTIST);
@@ -529,47 +654,10 @@ public class Main {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 
-				/*
-				 * try { if (list != null && list.getSelection() != null &&
-				 * list.getSelection().length > 0) { if (p == null) { String[]
-				 * args = new String[2]; args[0] = "vlc"; args[1] = "file://" +
-				 * list.getSelection()[0].toString() + "";
-				 * System.out.println(args[0] + args[1]); p =
-				 * Runtime.getRuntime().exec(args);
-				 * System.out.println(p.getOutputStream().toString());
-				 * mediaButton.setImage(mediaStopImage); } else { String[] args
-				 * = new String[2]; System.out.println(args[0] + args[1]);
-				 * p.destroy(); p = null; mediaButton.setImage(mediaStartImage);
-				 * } } else { if (p == null) { String[] args = new String[2];
-				 * args[0] = "vlc"; args[1] = folderPath.getText(); //+
-				 * list.getSelection()[0].toString() + "";
-				 * System.out.println(args[0] + args[1]); p =
-				 * Runtime.getRuntime().exec(args);
-				 * System.out.println(p.getOutputStream().toString());
-				 * mediaButton.setImage(mediaStopImage); } else { String[] args
-				 * = new String[2]; System.out.println(args[0] + args[1]);
-				 * p.destroy(); p = null; mediaButton.setImage(mediaStartImage);
-				 * } } } catch (IOException e) { // TODO Auto-generated catch
-				 * block e.printStackTrace(); }
-				 */
-				/*
-				 * try { // Creer un nouveau lecteur et ajouter un ?couteur. if
-				 * (lecteur != null) lecteur.close(); lecteur =
-				 * Manager.createPlayer(new MediaLocator("file:/" +
-				 * list.getSelection()[0].toString())); //
-				 * lecteur.addControllerListener( new EventHandler() );
-				 * lecteur.addControllerListener(new ControllerListener() {
-				 * public void controllerUpdate(ControllerEvent event) { if
-				 * (event instanceof EndOfMediaEvent) { lecteur.stop();
-				 * lecteur.close(); } } }); lecteur.realize();
-				 * System.out.println("file:/" +
-				 * list.getSelection()[0].toString() + " "+ lecteur.getRate());
-				 * lecteur.start(); // D?marrage du lecteur. } catch (Exception
-				 * e) { System.out.println("Fichier ou emplacement invalide" +
-				 * "Chargement du fichier" + " erron?"); e.printStackTrace(); }
-				 */
-
-				getTask(list.getSelection()[0].toString()).start();
+				getTask(
+						folderPath.getText() + "/"
+								+ list.getSelection()[0].toString()).start();
+				pb.handle = 55;
 			}
 
 			@Override
@@ -578,7 +666,21 @@ public class Main {
 
 			}
 		});
-		// shell.pack();
+		stopButton.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+
+				stop();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -593,9 +695,9 @@ public class Main {
 			for (File child : children) {
 				if (child.isFile()
 						&& child.getName().toLowerCase().endsWith(".mp3")) {
-					all.add(child.getAbsolutePath());
+					all.add(child.getName());
 				}
-				addTree(child, all);
+				// addTree(child, all);
 			}
 		}
 	}
@@ -627,13 +729,12 @@ public class Main {
 		list.redraw();
 	}
 
-	
 	public static Thread getTask(String fileName) {
 		final String fFileName = fileName;
 		if (player != null) {
 			player.close();
 		}
-		if (playerThread != null ) {
+		if (playerThread != null) {
 			playerThread.interrupt();
 		}
 
@@ -660,5 +761,14 @@ public class Main {
 
 		return playerThread;
 
+	}
+
+	public static void stop() {
+		if (player != null) {
+			player.close();
+		}
+		if (playerThread != null) {
+			playerThread.interrupt();
+		}
 	}
 }
