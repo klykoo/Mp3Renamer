@@ -33,8 +33,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -78,30 +76,18 @@ public class Main {
 		// ============================================
 
 		final Display display = new Display();
-		final Image imageSave = new Image(display, Main.class.getClassLoader()
-				.getResourceAsStream("save.png"));
-		final Image imageExit = new Image(display, Main.class.getClassLoader()
-				.getResourceAsStream("application_exit.png"));
-		final Image imageFind = new Image(display, Main.class.getClassLoader()
-				.getResourceAsStream("folder.png"));
-		final Image imageMusic = new Image(display, Main.class.getClassLoader()
-				.getResourceAsStream("music.png"));
-		final Image deleteFile = new Image(display, Main.class.getClassLoader()
-				.getResourceAsStream("edit-delete.png"));
-		final Image clearList = new Image(display, Main.class.getClassLoader()
-				.getResourceAsStream("edit-clear.png"));
-		final Image refreshList = new Image(display, Main.class
-				.getClassLoader().getResourceAsStream("repeat.png"));
-		final Image editCopy = new Image(display, Main.class.getClassLoader()
-				.getResourceAsStream("edit-copy.png"));
-		final Image aboutImage = new Image(display,
-				"ressources/icones/about.png");
-		final Image mediaStartImage = new Image(display, Main.class
-				.getClassLoader().getResourceAsStream("media-start.png"));
-		final Image mediaStopImage = new Image(display, Main.class
-				.getClassLoader().getResourceAsStream("media-stop.png"));
-		final Image mediaPlayAllImage = new Image(display, Main.class
-				.getClassLoader().getResourceAsStream("media-forward.png"));
+		final Image imageSave = new Image(display, Main.class.getClassLoader().getResourceAsStream("save.png"));
+		final Image imageExit = new Image(display, Main.class.getClassLoader().getResourceAsStream("application_exit.png"));
+		final Image imageFind = new Image(display, Main.class.getClassLoader().getResourceAsStream("folder.png"));
+		final Image imageMusic = new Image(display, Main.class.getClassLoader().getResourceAsStream("music.png"));
+		final Image deleteFile = new Image(display, Main.class.getClassLoader().getResourceAsStream("edit-delete.png"));
+		final Image clearList = new Image(display, Main.class.getClassLoader().getResourceAsStream("edit-clear.png"));
+		final Image refreshList = new Image(display, Main.class.getClassLoader().getResourceAsStream("repeat.png"));
+		final Image editCopy = new Image(display, Main.class.getClassLoader().getResourceAsStream("edit-copy.png"));
+		final Image aboutImage = new Image(display, "ressources/icones/about.png");
+		final Image mediaStartImage = new Image(display, Main.class.getClassLoader().getResourceAsStream("media-start.png"));
+		final Image mediaStopImage = new Image(display, Main.class.getClassLoader().getResourceAsStream("media-stop.png"));
+		final Image mediaPlayAllImage = new Image(display, Main.class.getClassLoader().getResourceAsStream("media-forward.png"));
 
 		final Shell shell = new Shell(display);
 		Menu appMenuBar = display.getMenuBar();
@@ -120,56 +106,57 @@ public class Main {
 				display.dispose();
 			};
 		});
-		
-		Image image = new Image (display, 20, 20);
-		Color color = display.getSystemColor (SWT.COLOR_BLUE);
-		GC gc = new GC (image);
-		gc.setBackground (color);
-		gc.fillRectangle (image.getBounds ());
-		gc.dispose ();
-		
-		Image disabledImage = new Image (display, 20, 20);
-		color = display.getSystemColor (SWT.COLOR_GREEN);
-		gc = new GC (disabledImage);
-		gc.setBackground (color);
-		gc.fillRectangle (disabledImage.getBounds ());
-		gc.dispose ();
-		
-		Image hotImage = new Image (display, 20, 20);
-		color = display.getSystemColor (SWT.COLOR_RED);
-		gc = new GC (hotImage);
-		gc.setBackground (color);
-		gc.fillRectangle (hotImage.getBounds ());
-		gc.dispose ();
-		
-		ToolBar bar = new ToolBar (shell, SWT.BORDER | SWT.FLAT);
-		Rectangle clientArea = shell.getClientArea ();
-		bar.setBounds (clientArea.x, clientArea.y, 200, 32);
-		
-			ToolItem item = new ToolItem (bar, 0);
-			item.setImage (imageSave);
-			item.setDisabledImage (disabledImage);
-			item.setHotImage (hotImage);
-			
-		
+
+		Image image = new Image(display, 20, 20);
+		Color color = display.getSystemColor(SWT.COLOR_BLUE);
+		GC gc = new GC(image);
+		gc.setBackground(color);
+		gc.fillRectangle(image.getBounds());
+		gc.dispose();
+
+		Image disabledImage = new Image(display, 20, 20);
+		color = display.getSystemColor(SWT.COLOR_GREEN);
+		gc = new GC(disabledImage);
+		gc.setBackground(color);
+		gc.fillRectangle(disabledImage.getBounds());
+		gc.dispose();
+
+		Image hotImage = new Image(display, 20, 20);
+		color = display.getSystemColor(SWT.COLOR_RED);
+		gc = new GC(hotImage);
+		gc.setBackground(color);
+		gc.fillRectangle(hotImage.getBounds());
+		gc.dispose();
+
+		ToolBar bar = new ToolBar(shell, SWT.BORDER | SWT.FLAT);
+		Rectangle clientArea = shell.getClientArea();
+		bar.setBounds(clientArea.x, clientArea.y, 200, 32);
+
+		ToolItem item = new ToolItem(bar, 0);
+		item.setImage(imageSave);
+		item.setDisabledImage(disabledImage);
+		item.setHotImage(hotImage);
+
 		FormLayout formLayout = new FormLayout();
 		final int insetX = 4, insetY = 4;
 		formLayout.marginWidth = insetX;
 		formLayout.marginHeight = insetY;
 		shell.setLayout(formLayout);
+		// shell.setFullScreen(true);
+		shell.setMaximized(true);
 
 		ToolBar toolBar = new ToolBar(shell, SWT.FLAT);
 		// toolBar.setLayoutData(formLayout);
 
 		shell.setText("Mp3 Renamer");
 
-		
 		shell.setImage(imageMusic);
 		// Label labelFolder = new Label(shell, SWT.WRAP);
 		// labelFolder.setText("Folder to explore: ");
 		folderPath = new Text(shell, SWT.WRAP);
 		folderPathLeft = new Text(shell, SWT.WRAP);
-		folderPath.setText("/home/freeman/Musique/");
+		folderPath.setText(System.getProperty("user.home"));
+		folderPathLeft.setText(System.getProperty("user.home"));
 		folderPath.setEditable(false);
 		folderPathLeft.setEditable(false);
 
@@ -217,24 +204,24 @@ public class Main {
 
 		final FormData scanFolderButtonData = new FormData(100, SWT.DEFAULT);
 		scanFolderButtonData.top = new FormAttachment(bar, 5);
-		scanFolderButtonData.right = new FormAttachment(50, 22);
-		scanFolderButtonData.width = 22;
+		scanFolderButtonData.right = new FormAttachment(50, 32);
+		scanFolderButtonData.width = 32;
 		scanFolderButton.setLayoutData(scanFolderButtonData);
 
 		final FormData scanFolderLeftButtonData = new FormData(100, SWT.DEFAULT);
 		scanFolderLeftButtonData.top = new FormAttachment(bar, 5);
-		scanFolderLeftButtonData.right = new FormAttachment(0, 22);
-		scanFolderLeftButtonData.width = 22;
+		scanFolderLeftButtonData.right = new FormAttachment(0, 32);
+		scanFolderLeftButtonData.width = 32;
 		scanFolderLeftButton.setLayoutData(scanFolderLeftButtonData);
 
 		// Exit button
-		final Button exitButton = new Button(shell, SWT.PUSH);
-		exitButton.setImage(imageExit);
-		FormData exitButtonData = new FormData();
-		exitButtonData.right = new FormAttachment(90, 0);
-		exitButtonData.bottom = new FormAttachment(100, -5);
-		exitButtonData.width = 70;
-		exitButton.setLayoutData(exitButtonData);
+		/*
+		 * final Button exitButton = new Button(shell, SWT.PUSH);
+		 * exitButton.setImage(imageExit); FormData exitButtonData = new
+		 * FormData(); exitButtonData.right = new FormAttachment(0, 50);
+		 * exitButtonData.bottom = new FormAttachment(100, -5);
+		 * exitButtonData.width = 70; exitButton.setLayoutData(exitButtonData);
+		 */
 
 		// Clear button
 		final Button clearListButton = new Button(shell, SWT.PUSH);
@@ -270,6 +257,7 @@ public class Main {
 		saveButtonData.left = new FormAttachment(deleteButton, 5);
 		saveButtonData.bottom = new FormAttachment(100, -5);
 		saveButtonData.width = 50;
+		saveButtonData.height = 42;
 		saveButton.setLayoutData(saveButtonData);
 		saveButton.setToolTipText("Enregistrer le nouveau nom du fichier");
 
@@ -362,7 +350,7 @@ public class Main {
 		rateText = new Text(shell, SWT.WRAP);
 		rateText.setEditable(false);
 		FormData rateTextData = new FormData();
-		rateTextData.bottom = new FormAttachment(exitButton, -35);
+		rateTextData.bottom = new FormAttachment(clearListButton, -35);
 		rateTextData.left = new FormAttachment(0, 100);
 		rateText.setLayoutData(rateTextData);
 
@@ -370,7 +358,7 @@ public class Main {
 		Label sizeLabel = new Label(shell, SWT.WRAP);
 		sizeLabel.setText("File size");
 		FormData sizeLabelData = new FormData();
-		sizeLabelData.bottom = new FormAttachment(exitButton, -35);
+		sizeLabelData.bottom = new FormAttachment(clearListButton, -35);
 		sizeLabelData.left = new FormAttachment(rateText, 100);
 		sizeLabel.setLayoutData(sizeLabelData);
 
@@ -378,7 +366,7 @@ public class Main {
 		sizeText = new Text(shell, SWT.WRAP);
 		sizeText.setEditable(false);
 		FormData sizeTextData = new FormData();
-		sizeTextData.bottom = new FormAttachment(exitButton, -35);
+		sizeTextData.bottom = new FormAttachment(clearListButton, -35);
 		sizeTextData.left = new FormAttachment(sizeLabel, 5);
 		sizeTextData.width = 100;
 		sizeText.setLayoutData(sizeTextData);
@@ -387,7 +375,7 @@ public class Main {
 		Label durationLabel = new Label(shell, SWT.WRAP);
 		durationLabel.setText("File duration");
 		FormData durationLabellData = new FormData();
-		durationLabellData.bottom = new FormAttachment(exitButton, -35);
+		durationLabellData.bottom = new FormAttachment(clearListButton, -35);
 		durationLabellData.left = new FormAttachment(sizeText, 100);
 		durationLabel.setLayoutData(durationLabellData);
 
@@ -395,7 +383,7 @@ public class Main {
 		durationText = new Text(shell, SWT.WRAP);
 		durationText.setEditable(false);
 		FormData durationTextData = new FormData();
-		durationTextData.bottom = new FormAttachment(exitButton, -35);
+		durationTextData.bottom = new FormAttachment(clearListButton, -35);
 		durationTextData.left = new FormAttachment(durationLabel, 5);
 		durationTextData.width = 100;
 		durationText.setLayoutData(durationTextData);
@@ -404,7 +392,7 @@ public class Main {
 		Label rateLabel = new Label(shell, SWT.WRAP);
 		rateLabel.setText("File rate");
 		FormData rateLabelData = new FormData();
-		rateLabelData.bottom = new FormAttachment(exitButton, -35);
+		rateLabelData.bottom = new FormAttachment(clearListButton, -35);
 		rateLabelData.left = new FormAttachment(0, 5);
 		rateLabel.setLayoutData(rateLabelData);
 
@@ -419,16 +407,13 @@ public class Main {
 		text4Data.left = new FormAttachment(0, 100);
 		newFileName.setLayoutData(text4Data);
 
-		
-
-		final Scale pb = new Scale(shell,
-				SWT.WRAP);
-		FormData pbData = new FormData();
-		pbData.top = new FormAttachment(rateLabel, 10);
-		pbData.left = new FormAttachment(0, 0);
-		pbData.right = new FormAttachment(100, 0);
-		// pbData.width = 100;
-		pb.setLayoutData(pbData);
+		/*
+		 * final Scale pb = new Scale(shell, SWT.WRAP); FormData pbData = new
+		 * FormData(); pbData.top = new FormAttachment(rateLabel, 10);
+		 * pbData.left = new FormAttachment(0, 0); pbData.right = new
+		 * FormAttachment(100, 0); / pbData.width = 100;
+		 * pb.setLayoutData(pbData);
+		 */
 		// ==================================================
 		// Actions
 		// ==================================================
@@ -455,20 +440,41 @@ public class Main {
 			}
 		});
 
-		exitButton.addSelectionListener(new SelectionListener() {
+		scanFolderLeftButton.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				display.dispose();
+				DirectoryDialog dlg = new DirectoryDialog(shell);
+				dlg.setFilterPath(folderPath.getText());
+				dlg.setMessage("Select a directory");
+				String folder = dlg.open();
+				if (folder != null && !"".equals(folder)) {
+					folderPathLeft.setText(folder);
+					scanLeft();
+				}
 
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
+				fileName.setText("Widget default selected");
 
 			}
 		});
+
+		/*
+		 * exitButton.addSelectionListener(new SelectionListener() {
+		 * 
+		 * @Override public void widgetSelected(SelectionEvent arg0) {
+		 * display.dispose();
+		 * 
+		 * }
+		 * 
+		 * @Override public void widgetDefaultSelected(SelectionEvent arg0) { //
+		 * TODO Auto-generated method stub
+		 * 
+		 * } });
+		 */
 
 		refreshButton.addSelectionListener(new SelectionListener() {
 
@@ -499,13 +505,10 @@ public class Main {
 		});
 
 		deleteButton.addSelectionListener(new SelectionListener() {
-
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				MessageBox msg = new MessageBox(shell, SWT.ICON_WARNING
-						| SWT.CANCEL | SWT.NO | SWT.YES);
-				msg.setMessage("Are you sure you want to delete this file: "
-						+ fileName.getText() + " ?");
+				MessageBox msg = new MessageBox(shell, SWT.ICON_WARNING | SWT.CANCEL | SWT.NO | SWT.YES);
+				msg.setMessage("Are you sure you want to delete this file: " + fileName.getText() + " ?");
 				msg.setText("Delete a file");
 				int answer = msg.open();
 				// System.out.println(answer);
@@ -537,8 +540,7 @@ public class Main {
 				resetButList();
 				try {
 
-					File file = new File(folderPath.getText() + "/"
-							+ list.getSelection()[0]);
+					File file = new File(folderPath.getText() + "/" + list.getSelection()[0]);
 					fileName.setText(file.getName());
 					System.out.println(file.getAbsolutePath());
 					AudioFile mp3 = AudioFileIO.read(file);
@@ -549,12 +551,7 @@ public class Main {
 					DecimalFormat df = new DecimalFormat("###,###,###,###.##");
 					sizeText.setText(df.format(file.length() / 1024) + " Ko");
 					DecimalFormat df2 = new DecimalFormat("00");
-					durationText.setText(df2.format(mp3.getAudioHeader()
-							.getTrackLength() / 3600)
-							+ ":"
-							+ df2.format(mp3.getAudioHeader().getTrackLength() / 60)
-							+ ":"
-							+ df2.format(mp3.getAudioHeader().getTrackLength() % 60));
+					durationText.setText(df2.format(mp3.getAudioHeader().getTrackLength() / 3600) + ":" + df2.format(mp3.getAudioHeader().getTrackLength() / 60) + ":" + df2.format(mp3.getAudioHeader().getTrackLength() % 60));
 
 					artisteText.setText(artiste);
 					titreText.setText(titre);
@@ -563,16 +560,14 @@ public class Main {
 						artiste = artiste.replace('/', ' ');
 						artiste = artiste.replace('\\', ' ');
 						artiste = artiste.replace('.', ' ');
-						artiste = artiste.substring(0, 1).toUpperCase()
-								+ artiste.substring(1);
+						artiste = artiste.substring(0, 1).toUpperCase() + artiste.substring(1);
 					}
 					if (titre.length() > 1) {
 						titre = titre.replace('_', ' ');
 						titre = titre.replace('/', ' ');
 						titre = titre.replace('\\', ' ');
 						titre = titre.replace('.', ' ');
-						titre = titre.substring(0, 1).toUpperCase()
-								+ titre.substring(1);
+						titre = titre.substring(0, 1).toUpperCase() + titre.substring(1);
 					}
 					newFileName.setText(artiste + " - " + titre + ".mp3");
 
@@ -604,6 +599,76 @@ public class Main {
 
 			}
 		});
+		listLeft.addListener(SWT.Selection, new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				resetButList();
+				try {
+
+					File file = new File(folderPathLeft.getText() + "/" + listLeft.getSelection()[0]);
+					fileName.setText(file.getName());
+					System.out.println(file.getAbsolutePath());
+					AudioFile mp3 = AudioFileIO.read(file);
+					Tag tag = mp3.getTag();
+					String artiste = tag.getFirst(FieldKey.ARTIST);
+					String titre = tag.getFirst(FieldKey.TITLE);
+					rateText.setText(mp3.getAudioHeader().getBitRate() + "Kb/s");
+					DecimalFormat df = new DecimalFormat("###,###,###,###.##");
+					sizeText.setText(df.format(file.length() / 1024) + " Ko");
+					DecimalFormat df2 = new DecimalFormat("00");
+					durationText.setText(df2.format(mp3.getAudioHeader().getTrackLength() / 3600) + ":" + df2.format(mp3.getAudioHeader().getTrackLength() / 60) + ":" + df2.format(mp3.getAudioHeader().getTrackLength() % 60));
+
+					artisteText.setText(artiste);
+					titreText.setText(titre);
+					if (artiste.length() > 1) {
+						artiste = artiste.replace('_', ' ');
+						artiste = artiste.replace('/', ' ');
+						artiste = artiste.replace('\\', ' ');
+						artiste = artiste.replace('.', ' ');
+						artiste = artiste.substring(0, 1).toUpperCase() + artiste.substring(1);
+					}
+					if (titre.length() > 1) {
+						titre = titre.replace('_', ' ');
+						titre = titre.replace('/', ' ');
+						titre = titre.replace('\\', ' ');
+						titre = titre.replace('.', ' ');
+						titre = titre.substring(0, 1).toUpperCase() + titre.substring(1);
+					}
+					newFileName.setText(artiste + " - " + titre + ".mp3");
+
+				} catch (CannotReadException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TagException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ReadOnlyFileException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidAudioFrameException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (KeyNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NullPointerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+
+				} finally {
+					if (newFileName.getText().length() == 0)
+						newFileName.setText(fileName.getText());
+				}
+
+			}
+		});
 
 		saveButton.addSelectionListener(new SelectionListener() {
 
@@ -611,16 +676,14 @@ public class Main {
 			public void widgetSelected(SelectionEvent arg0) {
 				File file = new File(list.getSelection()[0]);
 				int index = list.getSelectionIndex();
-				File fileDest = new File(file.getParentFile() + "/"
-						+ newFileName.getText());
+				File fileDest = new File(file.getParentFile() + "/" + newFileName.getText());
 				if (fileDest.exists()) {
 					MessageBox msg = new MessageBox(shell);
-					msg.setMessage("Il existe dÃ©jÃ  un fichier avec ce nom dans le repertoire!!!");
+					msg.setMessage("Il existe déjà  un fichier avec ce nom dans le repertoire!!!");
 					msg.open();
 				} else {
 					file.renameTo(fileDest);
-					System.out.println(file.getParentFile() + "/"
-							+ newFileName.getText());
+					System.out.println(file.getParentFile() + "/" + newFileName.getText());
 					scan();
 					list.select(index);
 					list.notifyListeners(SWT.Selection, new Event());
@@ -653,11 +716,11 @@ public class Main {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				if (list.getSelection() != null && list.getSelection().length > 0) {
+					getTask(folderPath.getText() + "/" + list.getSelection()[0].toString()).start();
+				} else if (listLeft.getSelection() != null && listLeft.getSelection().length > 0)
+					getTask(folderPathLeft.getText() + "/" + listLeft.getSelection()[0].toString()).start();
 
-				getTask(
-						folderPath.getText() + "/"
-								+ list.getSelection()[0].toString()).start();
-				pb.handle = 55;
 			}
 
 			@Override
@@ -693,8 +756,7 @@ public class Main {
 		File[] children = file.listFiles();
 		if (children != null) {
 			for (File child : children) {
-				if (child.isFile()
-						&& child.getName().toLowerCase().endsWith(".mp3")) {
+				if (child.isFile() && child.getName().toLowerCase().endsWith(".mp3")) {
 					all.add(child.getName());
 				}
 				// addTree(child, all);
@@ -729,6 +791,15 @@ public class Main {
 		list.redraw();
 	}
 
+	static void scanLeft() {
+		reset();
+		ArrayList<String> aList = new ArrayList<String>();
+		addTree(new File(folderPathLeft.getText()), aList);
+		Collections.sort(aList);
+		listLeft.setItems(aList.toArray(new String[aList.size()]));
+		listLeft.redraw();
+	}
+
 	public static Thread getTask(String fileName) {
 		final String fFileName = fileName;
 		if (player != null) {
@@ -745,8 +816,7 @@ public class Main {
 					System.out.println("playing " + fFileName + "...");
 					InputStream in = new FileInputStream(new File(fFileName));
 
-					AudioDevice dev = FactoryRegistry.systemRegistry()
-							.createAudioDevice();
+					AudioDevice dev = FactoryRegistry.systemRegistry().createAudioDevice();
 					player = new Player(in, dev);
 					player.play();
 				} catch (IOException ex) {
