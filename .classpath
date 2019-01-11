@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="ressources/icones"/>
 	<classpathentry kind="lib" path="ressources/lib/jl1.0.1.jar"/>
-	<classpathentry kind="lib" path="ressources/lib/swt-4.5-win32-x86_64.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="ressources/lib/jaudiotagger-2.0.4-20111207.115108-15.jar"/>
+	<classpathentry kind="lib" path="ressources/lib/swt-4.11.MACOS.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
